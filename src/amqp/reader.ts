@@ -1,6 +1,6 @@
 import { getLogger, Logger } from '../logger/logger'
 
-import { Connection, Channel, ConsumeMessage, Replies, Options } from 'amqplib'
+import { Connection, Channel, ConsumeMessage, Replies } from 'amqplib'
 const amqp = require('amqplib')
 
 const logger: Logger = getLogger('AMQPReader')
@@ -13,13 +13,7 @@ const _exchange = {
 
 const _queueOptions = {
     name: '',
-    type: '',
     options: { exclusive: true }
-}
-
-interface Options {
-    durable?: boolean
-    exclusive?: boolean
 }
 
 interface Topic {

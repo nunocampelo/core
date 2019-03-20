@@ -41,7 +41,7 @@ export const writer: AMQPWriter = (() => {
 
     const write = async (content: object, topic: string) => {
         const messageId = uuidv1()
-        await channel.publish(_exchange.name, topic, Buffer.from(JSON.stringify(content)), { messageId })
+        await channel.publish(_exchange.name, topic, Buffer.from(JSON.stringify(content)), { messageId, persistent: true })
         logger.info(`[>] Published message to topic ${topic} with id ${messageId}`)
     }
 
