@@ -1,0 +1,31 @@
+{
+  "name": "core",
+  "version": "0.0.1",
+  "description": "core libraries",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "mocha --reporter spec",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "lint": "tslint --project \"./tsconfig.json\""
+  },
+  "author": "campelo",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^11.11.4",
+    "chai": "^4.2.0",
+    "mocha": "^6.0.2",
+    "tslint": "^5.14.0",
+    "typescript": "^3.3.4000"
+  },
+  "dependencies": {
+    "@types/amqplib": "^0.5.11",
+    "@types/nodemailer": "^4.6.6",
+    "amqplib": "^0.5.3",
+    "log4js": "^4.0.2",
+    "nodemailer": "^5.1.1",
+    "uuid": "^3.3.2"
+  }
+}
