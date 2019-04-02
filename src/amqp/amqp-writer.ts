@@ -1,5 +1,4 @@
-const uuidv1 = require('uuid/v1');
-
+const uuidv1 = require('uuid/v1')
 import { Connection, Channel } from 'amqplib'
 const amqp = require('amqplib')
 
@@ -19,7 +18,7 @@ export interface AMQPWriter {
     close: Function
 }
 
-export const writer: AMQPWriter = (() => {
+export const amqpWriter: AMQPWriter = (() => {
 
     let connection: Connection
     let channel: Channel
@@ -30,19 +29,20 @@ export const writer: AMQPWriter = (() => {
 
         connection = await amqp.connect(url)
         channel = await connection.createChannel()
-        await channel.assertExchange(exchange, _exchange.type, _exchange.options)
-        logger.info(`[*] Connected to exchange ${exchange}`)
+
+        logger.info(`[*] Connecting to exchange ${exchange}`)
+
+        return channel.assertExchange(exchange, _exchange.type, _exchange.options)
     }
 
-    const close = async () => {
-        await channel.close();
-        await connection.close()
+    const close = () => {
+        return Promise.all([channel.close(), connection.close()])
     }
 
-    const write = async (content: object, topic: string) => {
+    const write = (content: object, topic: string) => {
         const messageId = uuidv1()
-        await channel.publish(_exchange.name, topic, Buffer.from(JSON.stringify(content)), { messageId, persistent: true })
-        logger.info(`[>] Published message to topic ${topic} with id ${messageId}`)
+        logger.info(`[>] Publising message to topic ${topic} with id ${messageId}`)
+        return channel.publish(_exchange.name, topic, Buffer.from(JSON.stringify(content)), { messageId, persistent: true })
     }
 
     return {

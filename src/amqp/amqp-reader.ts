@@ -28,12 +28,11 @@ export interface AMQPReader {
     close: Function
 }
 
-export const reader: AMQPReader = (() => {
+export const amqpReader: AMQPReader = (() => {
 
     let connection: Connection
     let _topics: Array<Topic>;
     let _topicsObj: any = {};
-
 
     const connect = async (url: string, exchange: string, topics: Array<string>) => {
 
@@ -63,9 +62,8 @@ export const reader: AMQPReader = (() => {
         }))
     }
 
-    const close = async () => {
-        await Promise.all(_topics.map((topic: Topic) => topic.channel.close()))
-        await connection.close()
+    const close = () => {
+        return Promise.all([_topics.map((topic: Topic) => topic.channel.close()), connection.close()])
     }
 
     const bind = (topic: string, fn: Function) => {
@@ -95,14 +93,8 @@ export const reader: AMQPReader = (() => {
 
             logger.info(`[<] Incomming @${_topic.name} message id: ${messageId}`)
 
-            try {
-
-                await fn(JSON.parse(msg.content.toString()), msg.properties)
-                logger.info(`[$] Processed message id: ${messageId}`)
-
-            } catch (err) {
-                logger.error(`[x] Couldn't parse \n${msg.content.toString()} \nGot error ${err}`)
-            }
+            await fn(msg.content.toString(), msg.properties)
+            logger.info(`[$] Processed message id: ${messageId}`)
 
             _topic.channel.ack(msg)
         })
