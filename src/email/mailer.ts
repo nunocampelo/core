@@ -7,8 +7,8 @@ const logger: Logger = getLogger('Mailer')
 
 let transporter: Transporter;
 
-const start = async (options: object) => {
-    transporter = await nodemailer.createTransport(options)
+const start = (options: object): void => {
+    transporter = nodemailer.createTransport(options)
 }
 
 const send = (email: SendMailOptions): Promise<SentMessageInfo> => {
