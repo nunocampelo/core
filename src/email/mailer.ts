@@ -1,4 +1,4 @@
-import { Transporter, SendMailOptions } from 'nodemailer'
+import { Transporter, SendMailOptions, SentMessageInfo } from 'nodemailer'
 
 import { getLogger, Logger } from '../logger/logger'
 
@@ -11,19 +11,24 @@ const start = async (options: object) => {
     transporter = await nodemailer.createTransport(options)
 }
 
-const send = async (email: SendMailOptions) => {
-    const info = await transporter.sendMail(email)
-    logger.info(`[$] Outgoing email id: ${info.messageId}`)
+const send = (email: SendMailOptions): Promise<SentMessageInfo> => {
+
+    logger.info(`[$] Outgoing email to ${email.to}`)
+
+    return transporter.sendMail(email).then((mailInfo: SentMessageInfo) => {
+        logger.info(`[>] Email sent with id ${mailInfo.messageId}`)
+        return mailInfo
+    })
 }
 
-const close = async () => await transporter.close()
+const close = () => transporter.close()
 
 export { SendMailOptions } from 'nodemailer'
 
 export interface Mailer {
-    start: Function
-    send: Function
-    close: Function
+    start(options: object): void
+    send(email: SendMailOptions): Promise<SentMessageInfo>
+    close(): void
 }
 
 export const mailer: Mailer = { start, send, close }
