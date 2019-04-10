@@ -1,6 +1,9 @@
 import { Pool } from 'pg';
 
-let pool: Pool;
+import { getLogger, Logger } from '../logger/logger'
+
+let pool: Pool
+const logger: Logger = getLogger('PgConnector')
 
 const connect = (host: string, database: string, user: string, password: string, port: number) => {
     pool = new Pool({
@@ -14,7 +17,7 @@ const connect = (host: string, database: string, user: string, password: string,
 
 const query = (query: string) => pool.query(query)
 
-const close = () => pool.end()
+const close = () => pool.end().then(() => logger.info(`[$] Closed db connection`))
 
 export interface Pg {
     connect: Function
