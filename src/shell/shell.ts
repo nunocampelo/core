@@ -1,50 +1,58 @@
-// import { Logger, getLogger } from '../logger/logger'
-
-// const execute = require('child_process').exec
-
-// const logger: Logger = getLogger('shell')
-
-// const exec = (command: string, options: any, callback: any) => {
-
-//     const process = execute(command, options, callback)
-
-//     process.stdout.on('data', (data: any) =>
-//         logger.info(`[.] ${data.toString()}`)
-//     )
-
-//     process.stderr.on('data', (data: any) => {
-//         logger.error(`[x] ${data}`)
-//     })
-
-//     process.on('SIGINT', function (code: number) {
-//         console.log('child process exited with code ' + code.toString());
-//     })
-
-//     return process
-// }
-
-// export const shell: any = {
-//     exec
-// }
-
 const path = require('path');
 
 const processExec = require('child_process').exec
 const execFile = require('child_process').execFile
 const spawn = require('child_process').spawn
-// const DEV_PATH = 'D:\\Users\\T0206442\\dev\\core'
 
+import { PromiseResult, exec as promiseProcessExec } from 'child-process-promise'
+
+const promiseExec: any = (command: string, options: any) => {
+    return promiseProcessExec(command, options)
+}
+
+const serieAsync: any = async (commands: string[], options: any) => {
+    for (let index = 0; index < commands.length; index++) {
+        const command = commands[index]
+        await async(command, options)
+    }
+}
+
+const async: any = (command: string, options: any): Promise<void> => {
+
+    const promise: any = promiseProcessExec(command, options).then().catch()
+
+    let childProcess = promise.childProcess
+
+    childProcess.stdout.on('data', function (data: any) {
+        console.log(data.toString().replace('\n', ''))
+    })
+
+    childProcess.stderr.on('data', function (data: any) {
+        console.log(data.toString().replace('\n', ''))
+    })
+
+    return promise
+}
+
+const asyncIn: any = (command: string, path: string,  options: any): Promise<void> => {
+    return async(`cd ${path} ${command}`, options)
+}
 
 const exec: any = (command: string, options: any, cb: Function) => {
+
+    let stdoutData: any;
+    let stderrData: any;
 
     const script = processExec(command, options)
 
     script.stdout.on('data', (data: string) => {
         console.log(data)
+        stdoutData = data
     })
 
     script.stderr.on('data', (data: string) => {
         console.log(data)
+        stderrData = data
     })
 
     script.on('close', (code: Number) => {
@@ -52,8 +60,8 @@ const exec: any = (command: string, options: any, cb: Function) => {
             console.log(`child process exited with error code ${code}`)
         }
 
-        if(cb) {
-            cb(script)
+        if (cb) {
+            cb(script, stdoutData, stderrData)
         }
     })
 
@@ -65,7 +73,7 @@ const silentExec: any = (command: string, cb: Function) => {
     const script = processExec(command)
 
     script.on('close', (code: Number) => {
-        if(cb) {
+        if (cb) {
             cb(script)
         }
     })
@@ -89,6 +97,10 @@ export interface Shell {
     exec: Function,
     silentExec: Function,
     toCmdPath: Function,
+    promiseExec: Function,
+    serieAsync: Function,
+    async: Function,
+    asyncIn: Function
     // execInCore: Function,
     // silentExecInCore: Function
 }
@@ -97,6 +109,10 @@ export const shell: Shell = {
     exec,
     silentExec,
     toCmdPath,
+    promiseExec,
+    serieAsync,
+    async,
+    asyncIn
     // execInCore,
     // silentExecInCore
 }
