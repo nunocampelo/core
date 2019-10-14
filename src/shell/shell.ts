@@ -6,37 +6,43 @@ const spawn = require('child_process').spawn
 
 import { PromiseResult, exec as promiseProcessExec } from 'child-process-promise'
 
-const promiseExec: any = (command: string, options: any) => {
-    return promiseProcessExec(command, options)
+const promiseExec: any = (command: string, options: any) => promiseProcessExec(command, options)
+
+const seriePromises: any = async (promises: Promise<any>[]) => {
+    for (let index = 0; index < promises.length; index++) {
+        await promises
+    } 
 }
 
-const serieAsync: any = async (commands: string[], options: any) => {
+const serieAsync: any = async (commands: string[], options: any, silent: boolean = true) => {
     for (let index = 0; index < commands.length; index++) {
         const command = commands[index]
-        await async(command, options)
+        await async(command, options, silent)
     }
 }
 
-const async: any = (command: string, options: any): Promise<void> => {
+const async: any = (command: string, options: any, silent: boolean = true): Promise<void> => {
 
+    console.log(`async is` + silent)
     const promise: any = promiseProcessExec(command, options).then().catch()
-
     let childProcess = promise.childProcess
 
     childProcess.stdout.on('data', function (data: any) {
-        console.log(data.toString().replace('\n', ''))
+        if(!silent){
+            console.log(data.toString().replace('\n', ''))
+        }
     })
 
     childProcess.stderr.on('data', function (data: any) {
-        console.log(data.toString().replace('\n', ''))
+        if(!silent){
+            console.log(data.toString().replace('\n', ''))
+        }
     })
 
     return promise
 }
 
-const asyncIn: any = (command: string, path: string,  options: any): Promise<void> => {
-    return async(`cd ${path} ${command}`, options)
-}
+const asyncIn: any = (command: string, path: string,  options: any, silent: boolean = true): Promise<void> => async(`cd ${path} && ${command}`, options, silent)
 
 const exec: any = (command: string, options: any, cb: Function) => {
 
@@ -81,28 +87,17 @@ const silentExec: any = (command: string, cb: Function) => {
     return script
 }
 
-const toCmdPath = (bashPath: string) => {
-    return path.resolve(bashPath.replace('/d', ''))
-}
-
-// const silentExecInCore = (command: string, cb: Function = () => {}, folder: string = '') => {
-//     return shellUtils.exec(`cd ${DEV_PATH}\\${folder} && ${command}`, cb)
-// }
-
-// const execInCore = (command: string, cb: Function = () => {}, folder: string = '') => {
-//     return shellUtils.exec(`cd ${DEV_PATH}\\${folder} && ${command}`, cb)
-// }
+const toCmdPath = (bashPath: string) => path.resolve(bashPath.replace('/d', ''))
 
 export interface Shell {
-    exec: Function,
-    silentExec: Function,
-    toCmdPath: Function,
-    promiseExec: Function,
-    serieAsync: Function,
-    async: Function,
+    exec: Function
+    silentExec: Function
+    toCmdPath: Function
+    promiseExec: Function
+    serieAsync: Function
+    async: Function
     asyncIn: Function
-    // execInCore: Function,
-    // silentExecInCore: Function
+    seriePromises: Function
 }
 
 export const shell: Shell = {
@@ -112,9 +107,8 @@ export const shell: Shell = {
     promiseExec,
     serieAsync,
     async,
-    asyncIn
-    // execInCore,
-    // silentExecInCore
+    asyncIn,
+    seriePromises
 }
 
 
