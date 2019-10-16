@@ -11,7 +11,7 @@ const promiseExec: any = (command: string, options: any) => promiseProcessExec(c
 const seriePromises: any = async (promises: Promise<any>[]) => {
     for (let index = 0; index < promises.length; index++) {
         await promises
-    } 
+    }
 }
 
 const serieAsync: any = async (commands: string[], options: any, silent: boolean = true) => {
@@ -23,18 +23,17 @@ const serieAsync: any = async (commands: string[], options: any, silent: boolean
 
 const async: any = (command: string, options: any, silent: boolean = true): Promise<void> => {
 
-    console.log(`async is` + silent)
-    const promise: any = promiseProcessExec(command, options).then().catch()
+    const promise: any = promiseProcessExec(command, options)
     let childProcess = promise.childProcess
 
     childProcess.stdout.on('data', function (data: any) {
-        if(!silent){
+        if (!silent) {
             console.log(data.toString().replace('\n', ''))
         }
     })
 
     childProcess.stderr.on('data', function (data: any) {
-        if(!silent){
+        if (!silent) {
             console.log(data.toString().replace('\n', ''))
         }
     })
@@ -42,7 +41,7 @@ const async: any = (command: string, options: any, silent: boolean = true): Prom
     return promise
 }
 
-const asyncIn: any = (command: string, path: string,  options: any, silent: boolean = true): Promise<void> => async(`cd ${path} && ${command}`, options, silent)
+const asyncIn: any = (command: string, path: string, options: any, silent: boolean = true): Promise<void> => async(`cd ${path} && ${command}`, options, silent)
 
 const exec: any = (command: string, options: any, cb: Function) => {
 
