@@ -2,7 +2,7 @@ import { Transporter, SendMailOptions, SentMessageInfo } from 'nodemailer'
 
 import { getLogger, Logger } from '../logger/logger'
 
-const nodemailer = require("nodemailer")
+const nodemailer = require('nodemailer')
 const logger: Logger = getLogger('Mailer')
 
 let transporter: Transporter;
