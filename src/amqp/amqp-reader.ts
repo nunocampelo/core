@@ -4,7 +4,6 @@ import { Connection, Channel, ConsumeMessage, Replies } from 'amqplib'
 const amqp = require('amqplib')
 
 const logger: Logger = getLogger('AMQPReader')
-
 const _exchange = {
     name: '',
     type: 'topic',
@@ -44,7 +43,6 @@ export const amqpReader: AMQPReader = (() => {
 
             const channel: Channel = await connection.createChannel()
             const assertExchange: Replies.AssertExchange = await channel.assertExchange(exchange, _exchange.type, _exchange.options)
-
             const assertQueue: Replies.AssertQueue = await channel.assertQueue(_queueOptions.name, _queueOptions.options)
 
             await channel.bindQueue(assertQueue.queue, assertExchange.exchange, name)
