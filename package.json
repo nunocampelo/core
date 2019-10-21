@@ -1,10 +1,10 @@
 {
   "name": "@jsincubator/core",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "core libraries",
   "main": "dist/index.js",
   "scripts": {
-    "test": "mocha --reporter spec",
+    "test": "echo \"No test specified\"",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "lint": "tslint --project \"./tsconfig.json\""
@@ -20,7 +20,7 @@
     "@types/mocha": "^5.2.6",
     "@types/node": "^11.11.4",
     "chai": "^4.2.0",
-    "mocha": "^6.0.2",
+    "mocha": "^6.2.2",
     "tslint": "^5.14.0",
     "typescript": "^3.3.4000"
   },
