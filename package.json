@@ -39,6 +39,6 @@
     "uuid": "^3.3.2"
   },
   "np": {
-    "releaseDraft": "false"
+    "releaseDraft": false
   }
 }
