@@ -38,6 +38,7 @@ const snapshot = async (url: string, path: string, selector: string) => {
     })
 
     // await page.screenshot({ path: 'example.png' });
+
     await browser.close()
 }
 
