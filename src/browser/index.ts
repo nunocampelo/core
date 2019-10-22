@@ -15,8 +15,8 @@ const snapshot = async (url: string, path: string, selector: string) => {
     await page.goto(url);
     const padding: number = 0
 
-    const rect: any = await page.evaluate(selector => {
-        const element = document.querySelector(selector);
+    const rect: any = await page.evaluate((selector: string) => {
+        const element: any = document.querySelector(selector);
         if (!element)
             return null
         const { x, y, width, height } = element.getBoundingClientRect()
