@@ -1,6 +1,5 @@
 const currentDateTime = () => {
-    const now = new Date();
-    return now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() + ' ' + now.getHours() + "-" + now.getMinutes() + "-" + now.getSeconds()
+    return (new Date()).toISOString().replace(/[^a-z0-9]/gi, '-')
 }
 
 export interface DateUtils {

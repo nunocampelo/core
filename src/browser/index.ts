@@ -1,19 +1,21 @@
 const puppeteer = require('puppeteer')
 import { Browser as puppeteerBrowser } from 'puppeteer'
 
-const snapshot = async (url: string, path: string, selector: string) => {
+import { dateUtils } from '../date/date-utils'
 
-    const browser: puppeteerBrowser = await puppeteer.launch({ headless: false, executablePath: "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe" });
-    const page = await browser.newPage();
+const clip = async (url: string, selector: string, options: any, path?: string, padding: number = 0) => {
+
+    const browser: puppeteerBrowser = await puppeteer.launch(options)
+    // const browser: puppeteerBrowser = await puppeteer.launch({ headless: false, executablePath: "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe" });
+    const page = await browser.newPage()
 
     await page.setViewport({
         width: 1920,
         height: 1080,
         deviceScaleFactor: 1,
-    });
+    })
 
     await page.goto(url);
-    const padding: number = 0
 
     const rect: any = await page.evaluate((selector: string) => {
         const element: any = document.querySelector(selector);
@@ -28,7 +30,7 @@ const snapshot = async (url: string, path: string, selector: string) => {
     }
 
     await page.screenshot({
-        path: 'clip.png',
+        path: `clip-${dateUtils.currentDateTime()}.png`,
         clip: {
             x: rect.left - padding,
             y: rect.top - padding,
@@ -43,9 +45,9 @@ const snapshot = async (url: string, path: string, selector: string) => {
 }
 
 export interface Browser {
-    snapshot(url: string, path: string, selector: string): void
+    clip(url: string, selector: string, options: any, path?: string, padding?: number): void
 }
 
 export const browser: Browser = {
-    snapshot
+    clip
 }
