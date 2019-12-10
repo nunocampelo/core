@@ -3,9 +3,11 @@ const path = require('path');
 const processExec = require('child_process').exec
 const execFile = require('child_process').execFile
 const spawn = require('child_process').spawn
-
 import { PromiseResult, exec as promiseProcessExec } from 'child-process-promise'
 
+import { getLogger, Logger } from '../logger'
+
+const logger = getLogger('CoreShell')
 const promiseExec: any = (command: string, options: any) => promiseProcessExec(command, options)
 
 const seriePromises: any = async (promises: Promise<any>[]) => {
@@ -26,15 +28,15 @@ const async: any = (command: string, options: any, silent: boolean = true): Prom
     const promise: any = promiseProcessExec(command, options)
     let childProcess = promise.childProcess
 
-    childProcess.stdout.on('data', function (data: any) {
+    childProcess.stdout.on('data', async function (data: any) {
         if (!silent) {
-            console.log(data.toString().replace('\n', ''))
+            _logContentData(data)
         }
     })
 
     childProcess.stderr.on('data', function (data: any) {
         if (!silent) {
-            console.log(data.toString().replace('\n', ''))
+            _logContentData(data)
         }
     })
 
@@ -51,18 +53,18 @@ const exec: any = (command: string, options: any, cb: Function) => {
     const script = processExec(command, options)
 
     script.stdout.on('data', (data: string) => {
-        console.log(data)
+        _logContentData(data)
         stdoutData = data
     })
 
     script.stderr.on('data', (data: string) => {
-        console.log(data)
+        _logContentData(data)
         stderrData = data
     })
 
     script.on('close', (code: Number) => {
         if (code != 0) {
-            console.log(`child process exited with error code ${code}`)
+            logger.error(`child process exited with error code ${code}`)
         }
 
         if (cb) {
@@ -87,6 +89,8 @@ const silentExec: any = (command: string, cb: Function) => {
 }
 
 const toCmdPath = (bashPath: string) => path.resolve(bashPath.replace('/d', ''))
+
+const _logContentData = (content: any) => content.toString().split('\n').forEach((line: string) => logger.info(line))
 
 export interface Shell {
     exec: Function
