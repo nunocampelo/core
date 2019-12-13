@@ -90,7 +90,7 @@ const silentExec: any = (command: string, cb: Function) => {
 
 const toCmdPath = (bashPath: string) => path.resolve(bashPath.replace('/d', ''))
 
-const _logContentData = (content: any) => content.toString().split('\n').forEach((line: string) => logger.info(line))
+const _logContentData = (content: any) => content.toString().split('\n').forEach((line: string) => logger.info(line.replace(/\r/g,'')))
 
 export interface Shell {
     exec: Function
