@@ -1,6 +1,6 @@
 {
   "name": "@jsincubator/core",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "core libraries",
   "main": "dist/index.js",
   "scripts": {
@@ -16,25 +16,24 @@
   "homepage": "https://github.com/nunocampelo/core",
   "devDependencies": {
     "@types/chai": "^4.1.7",
-    "@types/child-process-promise": "^2.2.1",
     "@types/mocha": "^5.2.6",
     "@types/node": "^11.11.4",
-    "@types/puppeteer": "^1.20.2",
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
     "tslint": "^5.14.0",
     "typescript": "^3.3.4000"
   },
   "dependencies": {
-    "@types/amqplib": "^0.5.11",
-    "@types/nodemailer": "^4.6.6",
-    "@types/pg": "^7.4.14",
-    "amqplib": "^0.5.3",
+    "@types/amqplib": "^0.5.13",
+    "@types/child-process-promise": "^2.2.1",
+    "@types/nodemailer": "^4.6.8",
+    "@types/pg": "^7.14.1",
+    "amqplib": "^0.5.5",
     "app-root-path": "^2.2.1",
     "child-process-promise": "^2.2.1",
-    "log4js": "^4.0.2",
+    "log4js": "^4.5.1",
     "nodemailer": "^5.1.1",
-    "pg": "^7.9.0",
+    "pg": "^7.17.0",
     "uuid": "^3.3.2"
   },
   "np": {
