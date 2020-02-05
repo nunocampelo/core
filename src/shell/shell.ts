@@ -88,7 +88,14 @@ const silentExec: any = (command: string, cb: Function) => {
     return script
 }
 
-const toCmdPath = (bashPath: string) => path.resolve(bashPath.replace('/d', ''))
+const toCmdPath = (bashPath: string) => {
+
+    if(bashPath.startsWith('/d/') || bashPath.startsWith('/c/')){
+        bashPath = bashPath.substr(2)
+    }
+
+    return path.resolve(bashPath)
+}
 
 const _logContentData = (content: any) => content.toString().split('\n').forEach((line: string) => logger.info(line.replace(/\r/g,'')))
 

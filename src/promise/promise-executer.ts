@@ -3,6 +3,28 @@ const parallel = (...promises: Promise<any>[]) => {
     return Promise.all(promises)
 }
 
+const parallelWithMaxConcurrent = async (maxConcurrent: number, ...promises: Promise<any>[]) => {
+    
+    let gotPromises: number = 0
+
+    let startPromiseIndex: number = 0
+    let endPromiseIndex: number = 0
+
+    let results: any[] = []
+
+    while(promises.length > endPromiseIndex + 1) {
+
+        endPromiseIndex = startPromiseIndex + maxConcurrent - 1
+
+        results = results.concat(await Promise.all(promises.slice(startPromiseIndex, endPromiseIndex)))
+
+        startPromiseIndex = startPromiseIndex + maxConcurrent 
+    }
+
+    return results
+}
+
+
 const series = (...promises: Promise<any>[]) => {
     return promises.reduce((promiseChain, currentPromise) => {
         return promiseChain.then(chainResults =>
@@ -16,8 +38,10 @@ const series = (...promises: Promise<any>[]) => {
 export interface PromiseExecuter {
     parallel: Function
     series: Function
+    parallelWithMaxConcurrent: Function
+    //parallelWithMaxConcurrent (maxConcurrent: number, promises: Promise<any>): Promise<any>
 }
 
 export const promiseExecuter = {
-    parallel, series
+    parallel, series, parallelWithMaxConcurrent
 }
