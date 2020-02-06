@@ -6,7 +6,6 @@ const parallel = (...promises: Promise<any>[]) => {
 const parallelWithMaxConcurrent = async (maxConcurrent: number, ...promises: Promise<any>[]) => {
     
     let gotPromises: number = 0
-
     let startPromiseIndex: number = 0
     let endPromiseIndex: number = 0
 
@@ -15,9 +14,9 @@ const parallelWithMaxConcurrent = async (maxConcurrent: number, ...promises: Pro
     while(promises.length > endPromiseIndex + 1) {
 
         endPromiseIndex = startPromiseIndex + maxConcurrent - 1
-
+        // console.log(`from ${startPromiseIndex} to ${endPromiseIndex}`)
         results = results.concat(await Promise.all(promises.slice(startPromiseIndex, endPromiseIndex)))
-
+        // console.log(`got ${startPromiseIndex} to ${endPromiseIndex}`)
         startPromiseIndex = startPromiseIndex + maxConcurrent 
     }
 
