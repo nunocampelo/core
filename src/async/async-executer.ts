@@ -23,6 +23,14 @@ const parallelWithMaxConcurrent = async (maxConcurrent: number, ...promises: Pro
     return results
 }
 
+const parallelFlux = async function* (...promises: Promise<any>[]) {
+    for (const index in promises) {
+        if (promises.hasOwnProperty(index)) {
+            const promise = await promises[index]
+            yield await promise
+        }
+    }
+}
 
 const series = (...promises: Promise<any>[]) => {
     return promises.reduce((promiseChain, currentPromise) => {
@@ -34,13 +42,16 @@ const series = (...promises: Promise<any>[]) => {
     }, Promise.resolve([]));
 }
 
-export interface PromiseExecuter {
+export interface AsyncExecuter {
     parallel: Function
+    parallelWithMaxConcurrent (maxConcurrent: number, promises: Promise<any>[]): Promise<any>
+    parallelFlux (promises: Promise<any>[]): any
     series: Function
-    parallelWithMaxConcurrent: Function
-    //parallelWithMaxConcurrent (maxConcurrent: number, promises: Promise<any>): Promise<any>
 }
 
-export const promiseExecuter = {
-    parallel, series, parallelWithMaxConcurrent
+export const asyncExecuter = {
+    parallel,
+    parallelWithMaxConcurrent,
+    parallelFlux,
+    series, 
 }
