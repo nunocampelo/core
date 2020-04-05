@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('path')
 
 const processExec = require('child_process').exec
 const execFile = require('child_process').execFile
@@ -90,14 +90,17 @@ const silentExec: any = (command: string, cb: Function) => {
 
 const toCmdPath = (bashPath: string) => {
 
-    if(bashPath.startsWith('/d/') || bashPath.startsWith('/c/')){
+    if (bashPath.startsWith('/d/') || bashPath.startsWith('/c/')) {
         bashPath = bashPath.substr(2)
     }
 
     return path.resolve(bashPath)
 }
 
-const _logContentData = (content: any) => content.toString().split('\n').forEach((line: string) => logger.info(line.replace(/\r/g,'')))
+const _logContentData = (content: any) => content.toString().split('\n').forEach((line: string) => logger.info(line.replace(/\r/g, '')))
+
+// const getProjectPath = (direname: string) => path.resolve(direname + '/../..')
+// const appendToPath = (source: string, relativePath: string) => path.resolve(source + `/${relativePath}`)
 
 export interface Shell {
     exec: Function
@@ -108,6 +111,8 @@ export interface Shell {
     async: Function
     asyncIn: Function
     seriePromises: Function
+    // appendToPath: (source: string, relativePath: string) => string
+    // getProjectPath: (dirname: string) => string
 }
 
 export const shell: Shell = {
@@ -118,7 +123,9 @@ export const shell: Shell = {
     serieAsync,
     async,
     asyncIn,
-    seriePromises
+    seriePromises,
+    // appendToPath,
+    // getProjectPath
 }
 
 
